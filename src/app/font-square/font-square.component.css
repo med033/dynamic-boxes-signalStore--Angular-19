@@ -1,0 +1,71 @@
+.font-square {
+  background-color: var(--neutral-100);
+  border-radius: var(--border-radius-md);
+  padding: 2px 4px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  height: 40px;
+  min-width: 60px;
+  max-width: 80px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7rem;
+  margin: 2px;
+  flex: 0 0 auto;
+}
+
+.font-square:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.font-square.selected {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.font-square-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+.font-name {
+  font-size: 0.6rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.selection-indicator {
+  width: 6px;
+  height: 6px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.font-sample {
+  font-size: 1rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.font-squares-container {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.font-squares-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  gap: 4px;
+}
