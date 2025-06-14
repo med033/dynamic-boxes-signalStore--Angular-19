@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { SelectionService } from '../services/selection.service';
@@ -22,6 +22,8 @@ import { Observable, map } from 'rxjs';
       ]),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+ 
 })
 export class HeaderComponent {
   private selectionService = inject(SelectionService);
