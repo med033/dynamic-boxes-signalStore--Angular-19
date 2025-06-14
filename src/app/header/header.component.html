@@ -1,0 +1,28 @@
+<div class="header">
+  <div class="header-title">Selected Fonts</div>
+
+  <div class="font-boxes">
+    @for (font of selectedFonts(); track trackByFontId($index, font)) {
+    <div
+      class="font-box"
+      [class.selected]="font.id !== -1"
+      [class.empty]="font.id === -1"
+      [style.fontFamily]="font.family"
+      (click)="selectSlot($index)"
+      [class.active]="store.selectedSlotIndex() === $index"
+    >
+      @if (font.id !== -1) {
+      <span class="font-name">{{ font.name }}</span>
+      <div class="selection-indicator"></div>
+      } @else {
+      <span class="slot-number">{{ $index + 1 }}</span>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="d-flex justify-content-end align-items-center">
+    <div class="font-count">{{ selectedCount() }} / 9</div>
+    <button class="clear-button" (click)="clearAllSelections()">Clear All</button>
+  </div>
+</div>
