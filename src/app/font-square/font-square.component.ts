@@ -4,6 +4,7 @@ import {
   inject,
   OnDestroy,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -52,20 +53,17 @@ export class FontSquareComponent implements OnDestroy {
 
   @Input() font!: Font;
   selectedSlotIndex: number = -1;
-  selectedFonts: Font[] = [];
+  private cdr = inject(ChangeDetectorRef);
 
   private selectedSlotIndexSub =
     this.selectionService.selectedSlotIndex$.subscribe((index) => {
       this.selectedSlotIndex = index;
-    });
+      this.cdr.markForCheck();
 
-  private selectedFontsSub = this.selectionService.fonts$.subscribe((fonts) => {
-    this.selectedFonts = fonts.filter((font) => font.selected);
-  });
+    });
 
   ngOnDestroy(): void {
     this.selectedSlotIndexSub.unsubscribe();
-    this.selectedFontsSub.unsubscribe();
   }
 
   toggleSelection(): void {
