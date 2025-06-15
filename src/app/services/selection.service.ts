@@ -7,216 +7,32 @@ import { Font } from '../models/font.model';
 })
 export class SelectionService {
   private fonts: Font[] = [
-    {
-      id: 1,
-      name: 'Google',
-      family: 'Roboto, sans-serif',
+    // Initialize all fonts with empty selectedSlots array
+    ...Array(30).fill(null).map((_, index) => ({
+      id: index + 1,
+      name: [
+        'Google', 'Apple', 'Microsoft', 'Amazon', 'Meta', 'Twitter', 'Netflix',
+        'Spotify', 'Adobe', 'Intel', 'IBM', 'Samsung', 'Oracle', 'Nvidia',
+        'PayPal', 'Dropbox', 'Slack', 'Uber', 'Airbnb', 'Pinterest', 'Reddit',
+        'LinkedIn', 'YouTube', 'WhatsApp', 'TikTok', 'Snapchat', 'GitHub',
+        'Zoom', 'Twitch', 'Discord'
+      ][index],
+      family: [
+        'Roboto, sans-serif', 'SF Pro Display, sans-serif', 'Segoe UI, sans-serif',
+        'Amazon Ember, sans-serif', 'Helvetica Neue, sans-serif', 'Chirp, sans-serif',
+        'Netflix Sans, sans-serif', 'Circular, sans-serif', 'Adobe Clean, sans-serif',
+        'Intel One, sans-serif', 'IBM Plex Sans, sans-serif', 'SamsungOne, sans-serif',
+        'Oracle Sans, sans-serif', 'NVIDIA Sans, sans-serif', 'PayPal Sans, sans-serif',
+        'Sharp Grotesk, sans-serif', 'Lato, sans-serif', 'Uber Move, sans-serif',
+        'Cereal, sans-serif', 'Helvetica Neue, sans-serif', 'Noto Sans, sans-serif',
+        'Source Sans Pro, sans-serif', 'Roboto, sans-serif', 'San Francisco, sans-serif',
+        'Proxima Nova, sans-serif', 'Avenir Next, sans-serif', 'Inter, sans-serif',
+        'Lato, sans-serif', 'Roobert, sans-serif', 'Uni Sans, sans-serif'
+      ][index],
       selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 2,
-      name: 'Apple',
-      family: 'SF Pro Display, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 3,
-      name: 'Microsoft',
-      family: 'Segoe UI, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 4,
-      name: 'Amazon',
-      family: 'Amazon Ember, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 5,
-      name: 'Meta',
-      family: 'Helvetica Neue, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 6,
-      name: 'Twitter',
-      family: 'Chirp, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 7,
-      name: 'Netflix',
-      family: 'Netflix Sans, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 8,
-      name: 'Spotify',
-      family: 'Circular, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 9,
-      name: 'Adobe',
-      family: 'Adobe Clean, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 10,
-      name: 'Intel',
-      family: 'Intel One, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 11,
-      name: 'IBM',
-      family: 'IBM Plex Sans, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 12,
-      name: 'Samsung',
-      family: 'SamsungOne, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 13,
-      name: 'Oracle',
-      family: 'Oracle Sans, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 14,
-      name: 'Nvidia',
-      family: 'NVIDIA Sans, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 15,
-      name: 'PayPal',
-      family: 'PayPal Sans, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 16,
-      name: 'Dropbox',
-      family: 'Sharp Grotesk, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 17,
-      name: 'Slack',
-      family: 'Lato, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 18,
-      name: 'Uber',
-      family: 'Uber Move, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 19,
-      name: 'Airbnb',
-      family: 'Cereal, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 20,
-      name: 'Pinterest',
-      family: 'Helvetica Neue, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 21,
-      name: 'Reddit',
-      family: 'Noto Sans, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 22,
-      name: 'LinkedIn',
-      family: 'Source Sans Pro, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 23,
-      name: 'YouTube',
-      family: 'Roboto, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 24,
-      name: 'WhatsApp',
-      family: 'San Francisco, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 25,
-      name: 'TikTok',
-      family: 'Proxima Nova, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 26,
-      name: 'Snapchat',
-      family: 'Avenir Next, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 27,
-      name: 'GitHub',
-      family: 'Inter, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 28,
-      name: 'Zoom',
-      family: 'Lato, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 29,
-      name: 'Twitch',
-      family: 'Roobert, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
-    {
-      id: 30,
-      name: 'Discord',
-      family: 'Uni Sans, sans-serif',
-      selected: false,
-      selectedSlot: null,
-    },
+      selectedSlots: [],
+      value: Math.floor(Math.random() * 100) + 1,
+    }))
   ];
 
   private selectedSlotIndex = -1;
@@ -233,7 +49,6 @@ export class SelectionService {
   private loadFromLocalStorage(): void {
     try {
       const savedFonts = localStorage.getItem('selectedFonts');
-      // const savedSlotIndex = localStorage.getItem('selectedSlotIndex');
 
       if (savedFonts) {
         const parsedFonts = JSON.parse(savedFonts);
@@ -241,23 +56,21 @@ export class SelectionService {
           // Restore the selected fonts with their slots
           this.fonts = this.fonts.map((font) => {
             const savedFont = parsedFonts.find((f: any) => f.id === font.id);
-            if (savedFont && typeof savedFont.selectedSlot === 'number') {
+            if (savedFont && Array.isArray(savedFont.selectedSlots)) {
               return {
                 ...font,
-                selected: true,
-                selectedSlot: savedFont.selectedSlot,
+                selected: savedFont.selectedSlots.length > 0,
+                selectedSlots: savedFont.selectedSlots,
               };
             }
-            return { ...font, selected: false, selectedSlot: null };
+            return { ...font, selected: false, selectedSlots: [] };
           });
 
           this.fontsSubject.next(this.fonts);
         }
       }
-
     } catch (error) {
       console.warn('Failed to load from localStorage:', error);
-      // If there's an error, clear the corrupted data
       localStorage.removeItem('selectedFonts');
     }
   }
@@ -281,43 +94,63 @@ export class SelectionService {
     // Only allow selection if a slot is selected
     if (this.selectedSlotIndex === -1) {
       // Auto-select the first available slot if none is selected
-      const selectedCount = this.fonts.filter((f) => f.selected).length;
-      if (selectedCount < 9) {
-        this.selectSlot(selectedCount);
+      const occupiedSlots = new Set(this.fonts.flatMap(f => f.selectedSlots));
+      const availableSlot = Array.from({ length: 10 }, (_, i) => i)
+        .find(i => !occupiedSlots.has(i));
+      
+      if (availableSlot !== undefined) {
+        this.selectSlot(availableSlot);
       } else {
         return; // No slots available
       }
     }
 
-    // Remove any font currently in the selected slot
-    let updatedFonts = this.fonts.map((font) => {
-      if (font.selectedSlot === this.selectedSlotIndex) {
-        return { ...font, selected: false, selectedSlot: null };
-      }
-      return font;
-    });
+    // Find the font to toggle
+    const fontToToggle = this.fonts.find(f => f.id === id);
+    if (!fontToToggle) return;
 
-    // Remove this font from any other slot it might be in
-    updatedFonts = updatedFonts.map((font) => {
-      if (font.id === id && font.selected) {
-        return { ...font, selected: false, selectedSlot: null };
-      }
-      return font;
-    });
+    // If the font is already in this slot, remove it from this slot
+    if (fontToToggle.selectedSlots.includes(this.selectedSlotIndex)) {
+      const updatedFonts = this.fonts.map(font => {
+        if (font.id === id) {
+          const newSelectedSlots = font.selectedSlots.filter(slot => slot !== this.selectedSlotIndex);
+          return {
+            ...font,
+            selectedSlots: newSelectedSlots,
+            selected: newSelectedSlots.length > 0
+          };
+        }
+        return font;
+      });
+      this.fonts = updatedFonts;
+    } else {
+      // Remove any other font from this slot
+      const updatedFonts = this.fonts.map(font => {
+        if (font.selectedSlots.includes(this.selectedSlotIndex)) {
+          const newSelectedSlots = font.selectedSlots.filter(slot => slot !== this.selectedSlotIndex);
+          return {
+            ...font,
+            selectedSlots: newSelectedSlots,
+            selected: newSelectedSlots.length > 0
+          };
+        }
+        return font;
+      });
 
-    // Add this font to the selected slot
-    updatedFonts = updatedFonts.map((font) => {
-      if (font.id === id) {
-        return {
-          ...font,
-          selected: true,
-          selectedSlot: this.selectedSlotIndex,
-        };
-      }
-      return font;
-    });
+      // Add this font to the selected slot
+      this.fonts = updatedFonts.map(font => {
+        if (font.id === id) {
+          const newSelectedSlots = [...font.selectedSlots, this.selectedSlotIndex];
+          return {
+            ...font,
+            selectedSlots: newSelectedSlots,
+            selected: true
+          };
+        }
+        return font;
+      });
+    }
 
-    this.fonts = updatedFonts;
     this.fontsSubject.next(this.fonts);
     this.saveToLocalStorage();
 
@@ -332,22 +165,17 @@ export class SelectionService {
     const updatedFonts = this.fonts.map((font) => ({
       ...font,
       selected: false,
-      selectedSlot: null,
+      selectedSlots: []
     }));
     this.fonts = updatedFonts;
     this.fontsSubject.next(this.fonts);
-    // this.selectedSlotIndex = -1;
-    // this.selectedSlotIndexSubject.next(-1);
-
-    // Clear localStorage
     localStorage.removeItem('selectedFonts');
-    // localStorage.removeItem('selectedSlotIndex');
   }
 
   getSelectedFonts(): Font[] {
-    // Return fonts sorted by selectedSlot
+    // Return fonts that have any slots selected
     return this.fonts
-      .filter((font) => font.selected)
-      .sort((a, b) => (a.selectedSlot ?? 0) - (b.selectedSlot ?? 0));
+      .filter((font) => font.selectedSlots.length > 0)
+      .sort((a, b) => Math.min(...a.selectedSlots) - Math.min(...b.selectedSlots));
   }
 }

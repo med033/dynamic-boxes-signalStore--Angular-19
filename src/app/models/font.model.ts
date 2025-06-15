@@ -3,5 +3,6 @@ export interface Font {
   name: string;
   family: string;
   selected: boolean;
-  selectedSlot: number | null; // slot index if selected, otherwise null
+  selectedSlots: number[]; // array of slot indices where this font is selected
+  value: number; // random value for calculation
 }

@@ -29,7 +29,6 @@ export class HeaderComponent {
   private selectionService = inject(SelectionService);
 
   selectedSlotIndex$ = this.selectionService.selectedSlotIndex$;
-
   // Create an array of 10 slots with empty or selected fonts
   selectedFonts$ = this.selectionService.fonts$.pipe(
     map((fonts) => {
@@ -38,7 +37,8 @@ export class HeaderComponent {
         name: '',
         family: '',
         selected: false,
-        selectedSlot: null,
+        selectedSlots: [],
+        value: 0,
       });
 
       const slots = Array(10)
@@ -46,22 +46,24 @@ export class HeaderComponent {
         .map((_, index) => emptyFont(index));
 
       fonts.forEach((font) => {
-        if (
-          font.selected &&
-          font.selectedSlot !== null &&
-          font.selectedSlot >= 0
-        ) {
-          slots[font.selectedSlot] = font;
+        if (font.selected) {
+          font.selectedSlots.forEach(slotIndex => {
+            if (slotIndex >= 0 && slotIndex < 10) {
+              slots[slotIndex] = font;
+            }
+          });
         }
       });
 
       return slots;
     })
   );
-
-  // Calculate selected count directly from fonts$
+  // Calculate selected count using font values
   selectedCount$ = this.selectedFonts$.pipe(
-    map(fonts => fonts.filter(font => font.id !== -1).length)
+    map(fonts => fonts
+      .filter(font => font.id !== -1)
+      .reduce((sum, font) => sum + (font.value || 0), 0)
+    )
   );
   
   selectSlot(index: number): void {

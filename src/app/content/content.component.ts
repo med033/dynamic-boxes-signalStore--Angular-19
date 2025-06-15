@@ -9,8 +9,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { SelectionService } from '../services/selection.service';
 import { FontSquareComponent } from '../font-square/font-square.component';
 import { Font } from '../models/font.model';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { combineLatest, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-content',
@@ -36,13 +35,9 @@ export class ContentComponent implements OnDestroy {
   fonts$: Observable<Font[]> = this.selectionService.fonts$;
   selectedSlotIndex$: Observable<number> =
     this.selectionService.selectedSlotIndex$;
-
-  // Combined observable for visibility condition
-  showContent$ = combineLatest([this.selectedSlotIndex$, this.fonts$]).pipe(
-    map(([slotIndex, fonts]) => {
-      const selectedFonts = fonts.filter((f) => f.selected);
-      return slotIndex > -1;
-    })
+  // Show content when a slot is selected
+  showContent$ = this.selectedSlotIndex$.pipe(
+    map(slotIndex => slotIndex > -1)
   );
   constructor() {}
 
@@ -62,16 +57,15 @@ export class ContentComponent implements OnDestroy {
     });
     return columns;
   }
-
   getSelectedFonts(fonts: Font[]): (Font | null)[] {
     const slots: (Font | null)[] = Array(10).fill(null);
     fonts.forEach((font) => {
-      if (
-        font.selected &&
-        font.selectedSlot !== undefined &&
-        font.selectedSlot !== null
-      ) {
-        slots[font.selectedSlot] = font;
+      if (font.selected && font.selectedSlots.length > 0) {
+        font.selectedSlots.forEach(slotIndex => {
+          if (slotIndex >= 0 && slotIndex < 10) {
+            slots[slotIndex] = font;
+          }
+        });
       }
     });
     return slots;
