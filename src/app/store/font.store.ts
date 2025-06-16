@@ -24,14 +24,14 @@ export const FontStore = signalStore(
           if (Array.isArray(parsedFonts)) {
             const updatedFonts = store.fonts().map((font) => {
               const savedFont = parsedFonts.find((f: any) => f.id === font.id);
-              if (savedFont && typeof savedFont.selectedSlot === 'number') {
+              if (savedFont && Array.isArray(savedFont.selectedSlots)) {
                 return {
                   ...font,
-                  selected: true,
-                  selectedSlot: savedFont.selectedSlot,
+                  selected: savedFont.selectedSlots.length > 0,
+                  selectedSlots: savedFont.selectedSlots,
                 };
               }
-              return { ...font, selected: false, selectedSlot: null };
+              return { ...font, selected: false, selectedSlots: [] };
             });
             patchState(store, { fonts: updatedFonts });
           }
@@ -50,21 +50,23 @@ export const FontStore = signalStore(
         console.warn('Failed to save to localStorage:', error);
       }
     },
+
     selectSlot(index: number) {
       patchState(store, { selectedSlotIndex: index });
       this.saveToLocalStorage();
     },
+
     toggleSelection(id: number) {
       const currentFonts = store.fonts();
       const currentSlotIndex = store.selectedSlotIndex();
-      const selectedCount = currentFonts.filter((f) => f.selected).length;
+      const totalSlotsFilled = new Set(currentFonts.flatMap(f => f.selectedSlots)).size;
 
       // If no slot is selected, select the next available slot if possible
       if (currentSlotIndex === -1) {
-        if (selectedCount >= 9) {
+        if (totalSlotsFilled >= 9) {
           return; // Maximum selections reached
         }
-        this.selectSlot(selectedCount);
+        this.selectSlot(totalSlotsFilled);
       }
 
       // Get the font being toggled
@@ -73,39 +75,41 @@ export const FontStore = signalStore(
         return; // Font not found
       }
 
-      // If the font is already selected in a different slot, unselect it first
       let updatedFonts = currentFonts.map(font => {
-        if (font.id === id && font.selected) {
-          return { ...font, selected: false, selectedSlot: null };
-        }
-        return font;
-      });
-
-      // Unselect any font in the current slot
-      updatedFonts = updatedFonts.map(font => {
-        if (font.selectedSlot === store.selectedSlotIndex()) {
-          return { ...font, selected: false, selectedSlot: null };
-        }
-        return font;
-      });
-
-      // Select the target font in the current slot
-      updatedFonts = updatedFonts.map(font => {
         if (font.id === id) {
+          // Handle the target font
+          const slots = new Set(font.selectedSlots);
+          if (slots.has(currentSlotIndex)) {
+            // If font is already in this slot, remove it
+            slots.delete(currentSlotIndex);
+          } else {
+            // Add font to this slot
+            slots.add(currentSlotIndex);
+          }
           return {
             ...font,
-            selected: true,
-            selectedSlot: store.selectedSlotIndex(),
+            selected: slots.size > 0,
+            selectedSlots: Array.from(slots).sort((a, b) => a - b)
+          };
+        }
+        // Remove current slot from other fonts if it exists
+        if (font.selectedSlots.includes(currentSlotIndex)) {
+          const slots = font.selectedSlots.filter(slot => slot !== currentSlotIndex);
+          return {
+            ...font,
+            selected: slots.length > 0,
+            selectedSlots: slots
           };
         }
         return font;
       });
+
       patchState(store, { fonts: updatedFonts });
       this.saveToLocalStorage();
 
       // Move to next slot if available
       const nextSlotIndex = store.selectedSlotIndex() + 1;
-      if (nextSlotIndex < 9) { // Changed from 10 to 9 to match max slot count
+      if (nextSlotIndex < 10) {
         this.selectSlot(nextSlotIndex);
       }
     },
@@ -114,14 +118,19 @@ export const FontStore = signalStore(
       const updatedFonts = store.fonts().map((font) => ({
         ...font,
         selected: false,
-        selectedSlot: null,
+        selectedSlots: [],
       }));
       patchState(store, { fonts: updatedFonts });
       localStorage.removeItem('selectedFonts');
     },
 
     setInitialFonts(fonts: Font[]) {
-      patchState(store, { fonts });
+      const fontsWithEmptySlots = fonts.map(font => ({
+        ...font,
+        selectedSlots: [],
+        selected: false,
+      }));
+      patchState(store, { fonts: fontsWithEmptySlots });
       this.loadFromLocalStorage();
     }
   })),
@@ -129,7 +138,12 @@ export const FontStore = signalStore(
     selectedFonts: computed(() => 
       store.fonts()
         .filter((font) => font.selected)
-        .sort((a, b) => (a.selectedSlot ?? 0) - (b.selectedSlot ?? 0))
+        .sort((a, b) => ((a.selectedSlots[0] ?? 0) - (b.selectedSlots[0] ?? 0)))
+    ),
+    selectedCount: computed(() => 
+      store.fonts()
+        .filter((font) => font.selected)
+        .reduce((sum, font) => sum + font.value, 0)
     )
   }))
 );

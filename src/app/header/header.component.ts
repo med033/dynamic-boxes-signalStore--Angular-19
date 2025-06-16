@@ -34,7 +34,8 @@ export class HeaderComponent {
       name: '',
       family: '',
       selected: false,
-      selectedSlot: null,
+      selectedSlots: [],
+      value: 0,
     });
 
     const slots = Array(10)
@@ -42,27 +43,32 @@ export class HeaderComponent {
       .map((_, index) => emptyFont(index));
 
     fonts.forEach((font) => {
-      if (font.selected && font.selectedSlot !== null && font.selectedSlot >= 0) {
-        slots[font.selectedSlot] = font;
-      }
+      font.selectedSlots.forEach((slotIndex) => {
+        if (slotIndex >= 0 && slotIndex < slots.length) {
+          slots[slotIndex] = { ...font };
+        }
+      });
     });
 
     return slots;
   });
 
-  selectedCount = computed(() => 
-    this.store.fonts().filter(font => font.selected).length
-  );
-  
+  selectedCount = computed(() => {
+    return this.store.fonts().reduce(
+      (sum, font) => sum + font.value * font.selectedSlots.length,
+      0
+    );
+  });
+
+  trackByFontId(index: number, font: Font) {
+    return `${font.id}-${index}`;
+  }
+
   selectSlot(index: number): void {
     this.selectionService.selectSlot(index);
   }
 
   clearAllSelections(): void {
-    this.selectionService.clearAllSelections();
-  }
-
-  trackByFontId(index: number, font: Font | null): number {
-    return font?.id ?? index;
+    this.store.clearAllSelections();
   }
 }

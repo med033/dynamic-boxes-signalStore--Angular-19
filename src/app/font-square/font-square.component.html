@@ -1,6 +1,6 @@
 <div
   class="font-square"
-  [class.selected]="store.selectedSlotIndex() === font.selectedSlot"
+  [class.selected]="font.selectedSlots.includes(store.selectedSlotIndex())"
   (click)="toggleSelection()"
   [@selectionAnimation]="font.selected"
   [style.fontFamily]="font.family"
@@ -9,11 +9,11 @@
     <h3 class="font-name">{{ font.name }}</h3>
     <div
       class="selection-indicator"
-      *ngIf="store.selectedSlotIndex() === font.selectedSlot"
+      *ngIf="font.selectedSlots.includes(store.selectedSlotIndex())"
     ></div>
   </div>
 
   <div class="font-sample">
-    {{ getLogo() }}
+    {{ font.value }}
   </div>
 </div>

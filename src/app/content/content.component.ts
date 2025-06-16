@@ -60,12 +60,12 @@ export class ContentComponent {
   getSelectedFonts(fonts: Font[]): (Font | null)[] {
     const slots: (Font | null)[] = Array(10).fill(null);
     fonts.forEach((font) => {
-      if (
-        font.selected &&
-        font.selectedSlot !== undefined &&
-        font.selectedSlot !== null
-      ) {
-        slots[font.selectedSlot] = font;
+      if (font.selected && font.selectedSlots.length > 0) {
+        font.selectedSlots.forEach(slotIndex => {
+          if (slotIndex >= 0 && slotIndex < 10) {
+            slots[slotIndex] = font;
+          }
+        });
       }
     });
     return slots;
