@@ -33,23 +33,6 @@ import { Font } from '../models/font.model';
 })
 export class FontSquareComponent implements OnDestroy {
   private selectionService = inject(SelectionService);
-  private logos: { [key: string]: string } = {
-    Google: 'G',
-    Apple: '',
-    Microsoft: '',
-    Amazon: 'a',
-    Meta: 'M',
-    Twitter: '',
-    Netflix: 'N',
-    Spotify: '',
-    Adobe: 'A',
-    Intel: '',
-    IBM: 'IBM',
-    Samsung: 'S',
-    Oracle: 'O',
-    Nvidia: 'N',
-    PayPal: 'P',
-  };
 
   @Input() font!: Font;
   selectedSlotIndex: number = -1;
@@ -70,7 +53,4 @@ export class FontSquareComponent implements OnDestroy {
     this.selectionService.toggleSelection(this.font.id);
   }
 
-  getLogo(): string {
-    return this.logos[this.font.name] || this.font.name[0];
-  }
 }

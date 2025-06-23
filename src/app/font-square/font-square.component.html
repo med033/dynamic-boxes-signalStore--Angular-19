@@ -3,14 +3,11 @@
   [class.selected]="font.selectedSlots.includes(selectedSlotIndex)"
   (click)="toggleSelection()"
   [@selectionAnimation]="font.selected"
-  [style.fontFamily]="font.family"
 >
   <div class="font-square-header">
-    <h3 class="font-name">{{ font.name }}</h3>
-    <div
-      class="selection-indicator"
-      *ngIf="font.selectedSlots.includes(selectedSlotIndex)"
-    ></div>
+    @if(font.selectedSlots.includes(selectedSlotIndex)){
+    <div class="selection-indicator"></div>
+    }
   </div>
 
   <div class="font-sample">

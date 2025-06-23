@@ -34,8 +34,6 @@ export class HeaderComponent {
     map((fonts) => {
       const emptyFont = (index: number): Font => ({
         id: -1,
-        name: '',
-        family: '',
         selected: false,
         selectedSlots: [],
         value: 0,

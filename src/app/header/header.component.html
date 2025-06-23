@@ -1,6 +1,4 @@
 <div class="header">
-  <div class="header-title">Selected Fonts</div>
-
   <div class="font-boxes">
     @if (selectedFonts$ | async; as selectedFonts) { @for (font of
     selectedFonts; track trackByFontId($index, font)) {
@@ -8,12 +6,11 @@
       class="font-box"
       [class.selected]="font.id !== -1"
       [class.empty]="font.id === -1"
-      [style.fontFamily]="font.family"
       (click)="selectSlot($index)"
       [class.active]="(selectedSlotIndex$ | async) === $index"
     >
       @if (font.id !== -1) {
-      <span class="font-name">{{ font.name }}</span>
+      <span class="font-name">{{ font.value }}</span>
       <div class="selection-indicator"></div>
       } @else {
       <span class="slot-number">{{ $index + 1 }}</span>
