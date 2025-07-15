@@ -8,12 +8,9 @@ import { CommonModule } from "@angular/common";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { BoxComponent } from "./box-option/box-option.component";
 import { Box } from "../models/box.model";
-import { BehaviorSubject, Observable } from "rxjs";
-import { combineLatest, map } from "rxjs";
-import { inilializedOptions, Option } from "../models/option.model";
-import { LocalStorageService } from "../services/local-storage.service";
-import { OptionsService } from "./options.service";
-import { BoxesService } from "../boxes-container/boxes.service";
+import { Option } from "../models/option.model";
+import { OptionsStore } from "../store/option.store";
+import { BoxesStore } from "../store/boxes.store";
 
 @Component({
   selector: "app-options",
@@ -34,36 +31,15 @@ import { BoxesService } from "../boxes-container/boxes.service";
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionsComponent implements OnDestroy {
-  // Observable for currently boxes in the application.
-  boxes$: Observable<Box[]> = this.boxesService.boxes$;
-  /**
-   * Observable emitting the index of the currently selected box.
-   *
-   * This observable is sourced from the `boxesService.selectedBoxIndex$` and emits a number
-   * representing the index of the box that is currently selected by the user.
-   * Components can subscribe to this observable to react to selection changes in real-time.
-   */
-  selectedBoxIndex$: Observable<number> = this.boxesService.selectedBoxIndex$;
+export class OptionsComponent {
+  // Inject the signal stores
+  optionsStore = inject(OptionsStore);
+  boxesStore = inject(BoxesStore);
 
-  /**
-   * Holds the current options loaded from local storage, or falls back to `inilializedOptions` if none are found.
-   * 
-   * @remarks
-   * This property attempts to retrieve the user's saved options from local storage using the `loadOptions` method.
-   * If no options are found (i.e., `loadOptions()` returns `null` or `undefined`), it initializes the options with the default `inilializedOptions`.
-   * 
-   * @see inilializedOptions
-   */
-  options = this.localStorage.loadOptions() ?? inilializedOptions;
-  
-  ngOnInit(): void {}
-  constructor(
-    private boxesService: BoxesService,
-    private localStorage: LocalStorageService
-  ) {}
-
-  ngOnDestroy(): void {}
+  ngOnInit(): void {
+    // Initialize options from localStorage
+    this.optionsStore.initializeFromStorage();
+  }
 
   // Helper for template
   trackByBoxId(index: number, box: Box): number {

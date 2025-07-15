@@ -1,7 +1,7 @@
-<div class="option" [class.selected]="(optionId$ | async) === option.id" (click)="selectOption()"
+<div class="option" [class.selected]="optionsStore.selectedOptionId() === option.id" (click)="selectOption()"
   [@selectionAnimation]="option.selected">
   <div class="option-header">
-    @if((optionId$ | async) === option.id){
+    @if(optionsStore.selectedOptionId() === option.id){
     <div class="selection-indicator"></div>
     }
   </div>

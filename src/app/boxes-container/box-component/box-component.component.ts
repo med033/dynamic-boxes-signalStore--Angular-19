@@ -2,13 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  inject,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Box } from "../../models/box.model";
-import { LocalStorageService } from "../../services/local-storage.service";
 import { getOptionValue } from "../../helpers/calculValueOfSelectBox";
-import { BoxesService } from "../boxes.service";
-import { OptionsService } from "../../options/options.service";
+import { BoxesStore } from "../../store/boxes.store";
+import { OptionsStore } from "../../store/option.store";
 
 @Component({
   selector: "app-box-component",
@@ -19,11 +19,9 @@ import { OptionsService } from "../../options/options.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoxComponent {
-  // Observable for the currently selected box index
-  selectedBoxIndex$ = this.boxesService.selectedBoxIndex$;
-  
-  // All available options loaded from localStorage (or empty array if not found)
-  options = this.localStorage.loadOptions() ?? [];
+  // Inject the signal stores
+  boxesStore = inject(BoxesStore);
+  optionsStore = inject(OptionsStore);
 
   // The box to display (passed from parent)
   @Input() box!: Box;
@@ -33,16 +31,9 @@ export class BoxComponent {
   // Utility function to get the value of an option
   getOptionValue = getOptionValue;
 
-  constructor(
-    private boxesService: BoxesService,
-    private localStorage: LocalStorageService,
-    private optionsService: OptionsService
-  ) {}
-
   // Called when a box is selected in the UI
   selectBox = (index: number): void => {
-    this.boxesService.selectBox(index);
-    this.optionsService.saveSelectedOptionId(this.box.optionid);
+    this.boxesStore.selectBox(index);
+    this.optionsStore.saveSelectedOptionId(this.box.optionid);
   };
-  
 }

@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, computed } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { Box } from "../../models/box.model";
-import { Observable, map } from "rxjs";
 import { BoxComponent } from "../box-component/box-component.component";
 import { getOptionValue } from "../../helpers/calculValueOfSelectBox";
-import { LocalStorageService } from "../../services/local-storage.service";
-import { BoxesService } from "../boxes.service";
-import { OptionsService } from "../../options/options.service";
+import { BoxesStore } from "../../store/boxes.store";
+import { OptionsStore } from "../../store/option.store";
 
 @Component({
   selector: "app-box-container",
@@ -29,54 +27,44 @@ import { OptionsService } from "../../options/options.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoxContainerComponent {
-  boxes$ = this.boxesService.boxes$;
+  // Inject the signal stores
+  boxesStore = inject(BoxesStore);
+  optionsStore = inject(OptionsStore);
 
-  options = this.localStorage.loadOptions() ?? [];
-  constructor(
-    private boxesService: BoxesService,
-    private localStorage: LocalStorageService,
-    private optionsService: OptionsService
-  ) {}
   /**
-   * Observable that emits the total sum of the selected boxes' option values.
-   *
-   * This observable listens to changes in the `boxes$` stream, filters for boxes that are marked as selected,
-   * retrieves the value for each selected box using `getOptionValue` (rounded to two decimal places),
-   * and accumulates the sum of these values. If a box's option value is not found or invalid, it defaults to 0.
-   *
-   * @remarks
-   * - The calculation is reactive and updates whenever the `boxes$` observable emits a new value.
-   * - The sum is rounded to two decimal places for each box before accumulation.
-   *
-   * @see getOptionValue
-   * @see boxes$
+   * Computed signal that calculates the total sum of selected boxes' option values.
+   * 
+   * This computed signal automatically recalculates whenever the boxes or options change,
+   * filters for boxes that are selected, retrieves the value for each selected box using 
+   * `getOptionValue`, and accumulates the sum of these values.
    */
-  selectedCount$ = this.boxes$.pipe(
-    map((boxes) =>
-      boxes
-        .filter((box) => box.selected)
-        .reduce(
-          (sum, box) =>
-            sum +
-            (getOptionValue(box.optionid, this.options) || 0),
-          0
-        ).toFixed(2)
-    )
-  );
+  selectedCount = computed(() => {
+    const boxes = this.boxesStore.boxes();
+    const options = this.optionsStore.options();
+    
+    return boxes
+      .filter((box) => box.selected)
+      .reduce(
+        (sum, box) =>
+          sum + (getOptionValue(box.optionid, options) || 0),
+        0
+      )
+      .toFixed(2);
+  });
 
   /**
    * Clears all current selections in the box container.
    * 
-   * Invokes the `clearAllSelections` method on the `boxesService` to remove all box selections,
-   * and calls `clearOptionSelection` on the `optionsService` to reset any selected options.
+   * Invokes the `clearAllSelections` method on the `boxesStore` to remove all box selections,
+   * and calls `clearOptionSelection` on the `optionsStore` to reset any selected options.
    */
   clearAllSelections(): void {
-    this.boxesService.clearAllSelections();
-    this.optionsService.clearOptionSelection();
+    this.boxesStore.clearAllSelections();
+    this.optionsStore.clearOptionSelection();
   }
 
   /**
-   * trackBy function for Angular's *ngFor directive to optimize rendering of box items.
+   * trackBy function for Angular's @for to optimize rendering of box items.
    * Returns a unique identifier for each box, using the box's `id` property if available,
    * or the current index as a fallback.
    *

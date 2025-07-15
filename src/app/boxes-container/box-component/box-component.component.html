@@ -1,9 +1,20 @@
-<div class="box" [class.selected]="box.selected" [class.empty]="!box.selected" (click)="selectBox(index)"
-  [class.active]="(selectedBoxIndex$ | async) === index">
+<!-- Single box element -->
+<div
+  class="box"
+  [class.selected]="box.selected"
+  [class.empty]="!box.selected"
+  [class.active]="boxesStore.selectedBoxIndex() === index"
+  (click)="selectBox(index)"
+>
   @if (box.selected) {
-  <span class="box-name">{{ getOptionValue(box.optionid,options) }}</span>
+  <!-- Show option value if box is selected -->
+  <span class="box-name">{{
+    getOptionValue(box.optionid, optionsStore.options())
+  }}</span>
   <div class="selection-indicator"></div>
+  <!-- Visual indicator for selection -->
   } @else {
+  <!-- Show slot number if box is empty -->
   <span class="slot-number">{{ index + 1 }}</span>
   }
 </div>

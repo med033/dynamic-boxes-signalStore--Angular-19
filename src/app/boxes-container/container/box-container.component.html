@@ -1,23 +1,27 @@
 <div class="header">
+  <!-- Boxes row -->
   <div class="boxes">
-    @if (boxes$ | async; as boxes) {
-      @for (box of boxes; track trackByBoxId($index, box)) {
-        <app-box-component
-          [box]="box"
-          [index]="$index"
-        ></app-box-component>
-      } }
+    <!-- Loop through each box and render the box component -->
+    @for (box of boxesStore.boxes(); track trackByBoxId($index, box)) {
+      <app-box-component
+        [box]="box"           
+        [index]="$index"      
+      ></app-box-component>
+    }
   </div>
 
+  <!-- Controls section: clear button and total values display -->
   <div
     class="d-flex justify-content-end align-items-center flex-wrap flex-column"
   >
+    <!-- Button to clear all box selections -->
     <button class="clear-button" (click)="clearAllSelections()">
       Clear All
     </button>
+    <!-- Display the total value of selected boxes -->
     <div class="d-flex">
       Total values : <br />
-      {{ selectedCount$ | async }}
+      {{ selectedCount() }}  <!-- Shows the computed total value -->
     </div>
   </div>
 </div>

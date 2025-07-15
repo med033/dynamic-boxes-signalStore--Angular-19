@@ -2,15 +2,13 @@ import {
   Component,
   Input,
   inject,
-  OnDestroy,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { Option } from "../../models/option.model";
-import { OptionsService } from "../options.service";
-import { BoxesService } from "../../boxes-container/boxes.service";
+import { OptionsStore } from "../../store/option.store";
+import { BoxesStore } from "../../store/boxes.store";
 
 @Component({
   selector: "app-box-option",
@@ -32,28 +30,14 @@ import { BoxesService } from "../../boxes-container/boxes.service";
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BoxComponent implements OnDestroy {
+export class BoxComponent {
   @Input() option!: Option;
-  selectedBoxIndex: number = -1;
-
-  private selectedBoxIndexSub = this.boxesService.selectedBoxIndex$.subscribe(
-    (index) => {
-      this.selectedBoxIndex = index;
-      this.cdr.markForCheck();
-    }
-  );
-  optionId$ = this.optionsService.optionId$;
-
-  constructor(
-    private optionsService: OptionsService,
-    private cdr: ChangeDetectorRef,
-    private boxesService: BoxesService
-  ) {}
-  ngOnDestroy(): void {
-    this.selectedBoxIndexSub.unsubscribe();
-  }
+  
+  // Inject the signal stores
+  optionsStore = inject(OptionsStore);
+  boxesStore = inject(BoxesStore);
 
   selectOption(): void {
-    this.boxesService.fillBoxWithOption(this.option.id);
+    this.boxesStore.fillBoxWithOption(this.option.id);
   }
 }
