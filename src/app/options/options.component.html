@@ -1,7 +1,12 @@
+<!-- Main content container with grid animation -->
 <div class="content-container" @gridAnimation>
+  <!-- Only show options if a box is selected -->
   @if (boxesStore.selectedBoxIndex() > -1) {
-  @for (column of distributeIntoColumns(optionsStore.options()); track trackByColumn) {
+  <!-- Distribute options into columns for layout -->
+  @for (column of distributeIntoColumns(optionsStore.options()); track
+  trackByColumn) {
   <div class="column">
+    <!-- Render each option as a box option component -->
     @for (option of column; track trackByBoxId) {
     <app-box-option [option]="option"></app-box-option>
     }
